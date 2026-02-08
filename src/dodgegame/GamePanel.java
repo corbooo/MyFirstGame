@@ -9,6 +9,10 @@ public class GamePanel extends JPanel{
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
 
+    private boolean alive = true;
+    private final int playerSize = 30;
+    private final Spike spike = new Spike(200, -150, 40);
+
     //Player world position (double = smooth movement)
     private double px = 0;
     private double py = 0;
@@ -73,7 +77,15 @@ public class GamePanel extends JPanel{
         }).start();
     }
 
+    private Rectangle getPlayerHitbox() {
+        int left = (int)(px - playerSize / 2.0);
+        int top = (int)(py - playerSize / 2.0);
+        return new Rectangle(left, top, playerSize, playerSize);
+    }
+
     private void updateGame() {
+        if (!alive) return;
+
         // Move player in WORLD coordinates
         double speed = 4.0;
         if (up) py -= speed;
@@ -84,6 +96,10 @@ public class GamePanel extends JPanel{
         // Camera follows player: player stays centered
         camX = px - (WIDTH / 2.0);
         camY = py - (HEIGHT / 2.0);
+
+        if (alive && getPlayerHitbox().intersects(spike.getHitBox())) {
+            alive = false;
+        }
     }
 
 
@@ -91,13 +107,16 @@ public class GamePanel extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Convert world -> screen helper (inline for simplicity)
+        if (!alive) {
+            g.setColor(Color.BLACK);
+            g.drawString("GAME OVER", WIDTH / 2 - 40, HEIGHT / 2 - 50);
+        }
+
+        // Convert world -> screen helper
         int spikeScreenX = (int) (spikeWorldX - camX);
         int spikeScreenY = (int) (spikeWorldY - camY);
-
-        // Draw spike (placeholder: red square for now)
         g.setColor(Color.RED);
-        g.fillRect(spikeScreenX, spikeScreenY, spikeSize, spikeSize);
+        g.fillRect(spikeScreenX, spikeScreenY, spike.size, spike.size);
 
         // Draw player ALWAYS at center of screen
         int playerSize = 30;
