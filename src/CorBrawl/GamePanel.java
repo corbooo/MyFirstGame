@@ -160,10 +160,9 @@ public class GamePanel extends JPanel{
         }
     }
     private void fireBullet(int aimScreenX, int aimScreenY) {
-        int x = (int) camX + aimScreenX;
-        int y = (int) camY + aimScreenY;
-
-        bullets.add(new Bullet(x, y, bulletSize));
+        Bullet bullet = new Bullet((int) px, (int) py, bulletSize);
+        bullet.setVelocity(aimScreenX, aimScreenY);
+        bullets.add(bullet);
     }
     private void maintainBullets() {
         
@@ -198,6 +197,7 @@ public class GamePanel extends JPanel{
 
         maintainSpikes();
         maintainEnemies();
+        maintainBullets();
 
         if (alive) {
             var playerHitbox = getPlayerHitbox();
@@ -254,6 +254,10 @@ public class GamePanel extends JPanel{
         g.setColor(Color.BLACK);
         g.drawString("Player world: (" + (int)px + ", " + (int)py + ")", 10, 20);
         g.drawString("Enemy cap: " + currentEnemyCap(), 10, 40);
+        g.drawString("CamX: " + camX, 10, 60);
+        g.drawString("CamY: " + camY, 10, 80);
+        g.drawString("AimScreenX: " + aimScreenX, 10, 100);
+        g.drawString("AimScreenY: " + aimScreenY, 10, 120);
 
 
         if (!alive) {
