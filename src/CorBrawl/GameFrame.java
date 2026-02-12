@@ -8,13 +8,14 @@ public class GameFrame extends JFrame {
         setTitle("CorBrawl");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        setLocationRelativeTo(null);
-        setVisible(true);
-
+        
         GamePanel panel = new GamePanel();
         add(panel);
+
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
+        
         panel.requestFocusInWindow();
     }
 }

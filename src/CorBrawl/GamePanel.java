@@ -165,7 +165,9 @@ public class GamePanel extends JPanel{
         bullets.add(bullet);
     }
     private void maintainBullets() {
-        
+        bullets.removeIf(b ->
+            Math.abs(b.x - px) > rangeX || Math.abs(b.y - py) > rangeY
+        );
     }
 
     private boolean isInsideView(double x, double y) {
@@ -207,6 +209,11 @@ public class GamePanel extends JPanel{
                     break;
                 }
             }
+            for (Bullet b : bullets) {
+                b.x += b.vx;
+                b.y += b.vy;
+            }
+            System.out.println(bullets.size());
         }
     }
 

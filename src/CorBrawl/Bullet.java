@@ -5,9 +5,11 @@ import java.awt.Rectangle;
 public class Bullet {
     public int x;
     public int y;
-    public int vx;
-    public int vy;
+    public double vx;
+    public double vy;
     public int size;
+
+    private double speed = 8.0; //Speed of the bullet
 
     public Bullet(int x, int y, int size) {
         this.x = x;
@@ -18,10 +20,13 @@ public class Bullet {
     public void setVelocity(int aimScreenX, int aimScreenY) {
         double dx = aimScreenX - GamePanel.WIDTH / 2.0;
         double dy = aimScreenY - GamePanel.HEIGHT / 2.0;
-        double angleRads = Math.atan2(dy, dx);
-        double angleDegrees = Math.toDegrees(angleRads);
-        System.out.println(angleDegrees);
-        // TODO: This gives us the angle to where I click. I now need to scale that down for velocity
+        
+        double length = Math.sqrt(dx * dx + dy * dy);
+
+        if (length == 0) return;
+
+        vx = (dx / length) * speed;
+        vy = (dy / length) * speed;
     }
 
     public Rectangle getHitbox() {
