@@ -3,13 +3,13 @@ package src.CorBrawl;
 import java.awt.Rectangle;
 
 public class Bullet {
-    public int x;
-    public int y;
+    public double x;
+    public double y;
     public double vx;
     public double vy;
     public int size;
 
-    private double speed = 8.0; //Speed of the bullet
+    private final double speed = 12.0; //Speed of the bullet
 
     public Bullet(int x, int y, int size) {
         this.x = x;
@@ -30,7 +30,7 @@ public class Bullet {
     }
 
     public Rectangle getHitbox() {
-        return new Rectangle(x, y, size, size);
+        return new Rectangle((int) x, (int) y, size, size);
     }
 
 }

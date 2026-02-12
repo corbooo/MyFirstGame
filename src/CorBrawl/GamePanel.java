@@ -9,8 +9,8 @@ import java.util.Random;
 
 public class GamePanel extends JPanel{
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 1024;
+    public static final int HEIGHT = 768;
 
     private boolean alive = true;
     private final int playerSize = 30;
@@ -36,9 +36,9 @@ public class GamePanel extends JPanel{
 
     private final Random rng = new Random();
 
-    private final int spikeSize = 40;
+    private final int spikeSize = 50;
     private final int targetSpikes = 60;
-    private final int enemySize = 20;
+    private final int enemySize = 40;
     private final int enemyHp = 3;
     private final int bulletSize = 10;
 
@@ -50,7 +50,7 @@ public class GamePanel extends JPanel{
 
     private final double rangeX = WIDTH * 2.5;
     private final double rangeY = HEIGHT * 2.5;
-    private double safeRadius = 150;
+    private final double safeRadius = 150;
 
 
     public GamePanel() {
@@ -83,7 +83,7 @@ public class GamePanel extends JPanel{
         });
 
         while (spikes.size() < targetSpikes) {
-            addRandomSpikeNearPLayer();
+            addRandomSpikeNearPlayer();
         }
 
         addMouseListener(new MouseAdapter() {
@@ -109,7 +109,7 @@ public class GamePanel extends JPanel{
         return new Rectangle(left, top, playerSize, playerSize);
     }
 
-    private void addRandomSpikeNearPLayer() {
+    private void addRandomSpikeNearPlayer() {
         while (true) {
             int x = (int) (px + (rng.nextDouble() * 2 - 1) * rangeX);
             int y = (int) (py + (rng.nextDouble() * 2 - 1) * rangeY);
@@ -132,10 +132,10 @@ public class GamePanel extends JPanel{
 
         // Add until back to 60 spikes
         while (spikes.size() < targetSpikes) {
-            addRandomSpikeNearPLayer();
+            addRandomSpikeNearPlayer();
         }
     }
-    private void addRandomEnemyNearPLayer() {
+    private void addRandomEnemyNearPlayer() {
         while (true) {
             int x = (int) (px + (rng.nextDouble() * 2 -1) * rangeX);
             int y = (int) (py + (rng.nextDouble() * 2 -1) * rangeY);
@@ -156,7 +156,7 @@ public class GamePanel extends JPanel{
         );
         int cap = currentEnemyCap();
         while (enemies.size() < cap) {
-            addRandomEnemyNearPLayer();
+            addRandomEnemyNearPlayer();
         }
     }
     private void fireBullet(int aimScreenX, int aimScreenY) {
@@ -201,6 +201,7 @@ public class GamePanel extends JPanel{
         maintainEnemies();
         maintainBullets();
 
+        // Check collisions
         if (alive) {
             var playerHitbox = getPlayerHitbox();
             for (Spike s : spikes) {
@@ -209,11 +210,11 @@ public class GamePanel extends JPanel{
                     break;
                 }
             }
-            for (Bullet b : bullets) {
-                b.x += b.vx;
-                b.y += b.vy;
-            }
-            System.out.println(bullets.size());
+        }
+
+        for (Bullet b : bullets) {
+            b.x += b.vx;
+            b.y += b.vy;
         }
     }
 
@@ -223,6 +224,9 @@ public class GamePanel extends JPanel{
         py = 0;
         aimScreenX = WIDTH / 2;
         aimScreenY = HEIGHT / 2;
+        enemies.clear();
+        spikes.clear();
+        bullets.clear();
         gameStartMs = System.currentTimeMillis();
     }
 
@@ -250,7 +254,6 @@ public class GamePanel extends JPanel{
         }
         
         // Draw player ALWAYS at center of screen
-        int playerSize = 30;
         int playerScreenX = WIDTH / 2 - playerSize / 2;
         int playerScreenY = HEIGHT / 2 - playerSize / 2;
         
