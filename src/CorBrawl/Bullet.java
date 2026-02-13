@@ -3,10 +3,8 @@ package src.CorBrawl;
 import java.awt.Rectangle;
 
 public class Bullet {
-    public double x;
-    public double y;
-    public double vx;
-    public double vy;
+    public double x, y;
+    public double vx, vy;
     public int size;
     public boolean fromPlayer;
 

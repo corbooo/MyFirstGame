@@ -3,11 +3,11 @@ package src.CorBrawl;
 import java.awt.Rectangle;
 
 public class Enemy {
-    public int x, y;
+    public double x, y;
     public int hp;
     public int size;
 
-    public Enemy(int x, int y, int hp, int size) {
+    public Enemy(double x, double y, int hp, int size) {
         this.x = x;
         this.y = y;
         this.hp = hp;

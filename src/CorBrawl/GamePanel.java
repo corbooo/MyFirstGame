@@ -192,15 +192,15 @@ public class GamePanel extends JPanel{
                         break;
                     }
                 }
+                if (hitSomething) continue;
                 for (var sIt = spikes.iterator(); sIt.hasNext();) {
                     Spike s = sIt.next();
-                    if (bBox.intersects(s.getHitBox())) {
+                    if (bBox.intersects(s.getHitbox())) {
                         bIt.remove();
                         hitSomething = true;
                         break;
                     }
                 }
-                if (hitSomething) continue;
             }
             // Enemy bullet -> Player
             else {
@@ -244,7 +244,7 @@ public class GamePanel extends JPanel{
         if (alive) {
             var playerHitbox = getPlayerHitbox();
             for (Spike s : spikes) {
-                if (playerHitbox.intersects(s.getHitBox())) {
+                if (playerHitbox.intersects(s.getHitbox())) {
                     alive = false;
                     break;
                 }
@@ -273,14 +273,14 @@ public class GamePanel extends JPanel{
 
         g.setColor(Color.BLACK);
         for (Spike s : spikes) {
-            int sx = (int) (s.x - camX);
-            int sy = (int) (s.y - camY);
+            int sx = (int) (s.x - camX) - s.size / 2;
+            int sy = (int) (s.y - camY) - s.size / 2;
             g.fillRect(sx, sy, s.size, s.size);
         }
         g.setColor(Color.RED);
         for (Enemy e : enemies) {
-            int ex = (int) (e.x - camX);
-            int ey = (int) (e.y - camY);
+            int ex = (int) (e.x - camX) - e.size / 2;
+            int ey = (int) (e.y - camY) - e.size / 2;
             g.fillRect(ex, ey, e.size, e.size);
         }
         g.setColor(Color.WHITE);
