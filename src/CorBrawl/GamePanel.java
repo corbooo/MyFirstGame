@@ -14,7 +14,7 @@ public class GamePanel extends JPanel{
 
     private boolean alive = true;
     private int score = 0;
-    private final int playerSize = 30;
+    private final int playerSize = 32;
     private double playerSpeed = 3.0;
     
     //Player world position (double = smooth movement)
@@ -34,11 +34,11 @@ public class GamePanel extends JPanel{
 
     private final Random rng = new Random();
 
-    private final int spikeSize = 50;
-    private final int targetSpikes = 60;
-    private final int enemySize = 40;
+    private final int spikeSize = 32;
+    private final int targetSpikes = 100;
+    private final int enemySize = 32;
     private final int enemyHp = 3;
-    private final int bulletSize = 10;
+    private final int bulletSize = 8;
 
     private final int baseEnemyCap = 20;
     private final int maxEnemyCap = 60;

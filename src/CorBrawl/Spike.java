@@ -3,7 +3,7 @@ package src.CorBrawl;
 import java.awt.Rectangle;
 
 public class Spike {
-    public double x, y; // world coords
+    public double x, y;
     public int size;
 
     public Spike(int x, int y, int size) {
