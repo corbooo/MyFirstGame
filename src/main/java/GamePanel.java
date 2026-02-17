@@ -1,5 +1,3 @@
-package src.CorBrawl;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -270,7 +268,7 @@ public class GamePanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        
         g.setColor(Color.BLACK);
         for (Spike s : spikes) {
             int sx = (int) (s.x - camX) - s.size / 2;

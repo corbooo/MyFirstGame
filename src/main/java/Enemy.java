@@ -1,5 +1,3 @@
-package src.CorBrawl;
-
 import java.awt.Rectangle;
 
 public class Enemy {
