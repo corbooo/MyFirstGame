@@ -25,7 +25,8 @@ public class GamePanel extends JPanel{
     //Import images
     private BufferedImage playerImage;
     private BufferedImage enemyImage;
-    private BufferedImage spikeImage;
+    private BufferedImage spike1Image;
+    private BufferedImage spike2Image;
     private BufferedImage bulletImage;
     private BufferedImage grass1Image;
     private BufferedImage grass2Image;
@@ -74,7 +75,8 @@ public class GamePanel extends JPanel{
 
         try {
             playerImage = ImageIO.read(new File("src/main/resources/player.png"));
-            spikeImage = ImageIO.read(new File("src/main/resources/spike.png"));
+            spike1Image = ImageIO.read(new File("src/main/resources/spike1.png"));
+            spike2Image = ImageIO.read(new File("src/main/resources/spike2.png"));
             enemyImage = ImageIO.read(new File("src/main/resources/enemy.png"));
             bulletImage = ImageIO.read(new File("src/main/resources/bullet.png"));
             grass1Image = ImageIO.read(new File("src/main/resources/grass1.png"));
@@ -161,8 +163,9 @@ public class GamePanel extends JPanel{
 
             if (dx * dx + dy * dy < safeRadius * safeRadius) continue; // too close to player
             if (isInsideView(x, y)) continue; // inside current viewing window
-
-            spikes.add(new Spike(x, y, spikeSize));
+            
+            if (rng.nextBoolean()) spikes.add(new Spike(x, y, spikeSize, spike1Image));
+            else spikes.add(new Spike(x, y, spikeSize, spike2Image));
             return;
         }
     }
@@ -333,7 +336,7 @@ public class GamePanel extends JPanel{
         for (Spike s : spikes) {
             int sx = (int) (s.x - camX) - s.size / 2;
             int sy = (int) (s.y - camY) - s.size / 2;
-            g.drawImage(spikeImage, sx, sy, s.size, s.size, null);
+            g.drawImage(s.image, sx, sy, s.size, s.size, null);
         }
         for (Enemy e : enemies) {
             int ex = (int) (e.x - camX) - e.size / 2;
