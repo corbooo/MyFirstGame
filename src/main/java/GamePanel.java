@@ -203,7 +203,9 @@ public class GamePanel extends JPanel{
     }
     private void fireBullet(int aimScreenX, int aimScreenY) {
         Bullet bullet = new Bullet((int) px, (int) py, bulletSize, true);
-        bullet.setVelocity(aimScreenX, aimScreenY);
+        double mouseWorldX = camX + aimScreenX;
+        double mouseWorldY = camY + aimScreenY;
+        bullet.aimAt(mouseWorldX, mouseWorldY);
         bullets.add(bullet);
     }
     private void maintainBullets() {

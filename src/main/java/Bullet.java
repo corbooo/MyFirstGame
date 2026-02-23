@@ -15,9 +15,9 @@ public class Bullet {
         this.fromPlayer = fromPlayer;
     }
 
-    public void setVelocity(int aimScreenX, int aimScreenY) {
-        double dx = aimScreenX - GamePanel.WIDTH / 2.0;
-        double dy = aimScreenY - GamePanel.HEIGHT / 2.0;
+    public void aimAt(double targetX, double targetY) {
+        double dx = targetX - x;
+        double dy = targetY - y;
         
         double length = Math.sqrt(dx * dx + dy * dy);
 
