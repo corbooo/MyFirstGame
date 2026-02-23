@@ -6,7 +6,7 @@ public class Bullet {
     public int size;
     public boolean fromPlayer;
 
-    private final double speed = 12.0; //Speed of the bullet
+    private double speed; //Speed of the bullet
 
     public Bullet(int x, int y, int size, boolean fromPlayer) {
         this.x = x;
@@ -23,6 +23,7 @@ public class Bullet {
 
         if (length == 0) return;
 
+        speed = (fromPlayer == true) ? 12.0 : 6.0;
         vx = (dx / length) * speed;
         vy = (dy / length) * speed;
     }

@@ -27,7 +27,8 @@ public class GamePanel extends JPanel{
     private BufferedImage enemyImage;
     private BufferedImage spike1Image;
     private BufferedImage spike2Image;
-    private BufferedImage bulletImage;
+    private BufferedImage playerBulletImage;
+    private BufferedImage enemyBulletImage;
     private BufferedImage grass1Image;
     private BufferedImage grass2Image;
     
@@ -78,7 +79,8 @@ public class GamePanel extends JPanel{
             spike1Image = ImageIO.read(new File("src/main/resources/spike1.png"));
             spike2Image = ImageIO.read(new File("src/main/resources/spike2.png"));
             enemyImage = ImageIO.read(new File("src/main/resources/enemy.png"));
-            bulletImage = ImageIO.read(new File("src/main/resources/bullet.png"));
+            playerBulletImage = ImageIO.read(new File("src/main/resources/bullet1.png"));
+            enemyBulletImage = ImageIO.read(new File("src/main/resources/bullet2.png"));
             grass1Image = ImageIO.read(new File("src/main/resources/grass1.png"));
             grass2Image = ImageIO.read(new File("src/main/resources/grass2.png"));
         } catch (Exception e) {
@@ -290,6 +292,9 @@ public class GamePanel extends JPanel{
                 }
             }
         }
+        for (Enemy e : enemies) {
+            e.update(px, py, camX, camY, bullets);
+        }
         for (Bullet b : bullets) {
             b.update();
         }
@@ -348,7 +353,10 @@ public class GamePanel extends JPanel{
         for (Bullet b : bullets) {
             int bx = (int) (b.x - camX) - bulletSize/2;
             int by = (int) (b.y - camY) - bulletSize/2;
-            g.drawImage(bulletImage, bx, by, b.size, b.size, null);
+            if (b.fromPlayer)
+                g.drawImage(playerBulletImage, bx, by, b.size, b.size, null);
+            else
+                g.drawImage(enemyBulletImage, bx, by, b.size, b.size, null);      
         }
         
         //Draw player aiming at mouse
