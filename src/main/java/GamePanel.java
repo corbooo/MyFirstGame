@@ -47,7 +47,7 @@ public class GamePanel extends JPanel{
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Bullet> bullets = new ArrayList<>();
 
-    private final Random rng = new Random();
+    public static final Random rng = new Random();
 
     private final int spikeSize = 32;
     private final int targetSpikes = 100;
@@ -293,7 +293,7 @@ public class GamePanel extends JPanel{
             }
         }
         for (Enemy e : enemies) {
-            e.update(px, py, WIDTH, HEIGHT, bullets);
+            e.update(px, py, camX, camY, WIDTH, HEIGHT, bullets);
         }
         for (Bullet b : bullets) {
             b.update();
