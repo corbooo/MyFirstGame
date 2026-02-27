@@ -293,7 +293,7 @@ public class GamePanel extends JPanel{
             }
         }
         for (Enemy e : enemies) {
-            e.update(px, py, camX, camY, bullets);
+            e.update(px, py, WIDTH, HEIGHT, bullets);
         }
         for (Bullet b : bullets) {
             b.update();

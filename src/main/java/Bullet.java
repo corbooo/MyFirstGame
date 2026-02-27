@@ -23,7 +23,7 @@ public class Bullet {
 
         if (length == 0) return;
 
-        speed = (fromPlayer == true) ? 12.0 : 6.0;
+        speed = (fromPlayer == true) ? 12.0 : 3.0;
         vx = (dx / length) * speed;
         vy = (dy / length) * speed;
     }
