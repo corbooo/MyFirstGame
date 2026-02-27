@@ -14,7 +14,15 @@ public class GamePanel extends JPanel{
     public static final int WIDTH = 1024;
     public static final int HEIGHT = 768;
 
+    public enum GameState {
+        MENU,
+        PLAYING,
+        GAME_OVER
+    }
+    private GameState state = GameState.MENU;
+
     private boolean alive = true;
+    private int highScore = 0;
     private int score = 0;
     private final int playerSize = 32;
     private double playerSpeed = 3.0;
@@ -90,6 +98,17 @@ public class GamePanel extends JPanel{
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+                int k = e.getKeyCode();
+
+                if (state == GameState.MENU) {
+                    if (k == KeyEvent.VK_ENTER) startGame();
+                    return;
+                }
+                if (state == GameState.GAME_OVER) {
+                    if (k == KeyEvent.VK_ENTER) startGame();
+                    if (k == KeyEvent.VK_ESCAPE) state = GameState.MENU;
+                    return;
+                }
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_W -> up = true;
                     case KeyEvent.VK_S -> down = true;
@@ -116,6 +135,7 @@ public class GamePanel extends JPanel{
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (state != GameState.PLAYING) return;
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     tryShoot(e.getX(), e.getY());
                 }
@@ -248,7 +268,7 @@ public class GamePanel extends JPanel{
             else {
                 if (bBox.intersects(playerHitbox)) {
                     bIt.remove();
-                    alive = false;
+                    onDeath();
                     return;
                 }
             }
@@ -269,8 +289,8 @@ public class GamePanel extends JPanel{
     }
 
     private void updateGame() {
+        if (state != GameState.PLAYING) return;
         if (!alive) return;
-
         if (up) py -= playerSpeed;
         if (down) py += playerSpeed;
         if (left) px -= playerSpeed;
@@ -287,7 +307,7 @@ public class GamePanel extends JPanel{
             var playerHitbox = getPlayerHitbox();
             for (Spike s : spikes) {
                 if (playerHitbox.intersects(s.getHitbox())) {
-                    alive = false;
+                    onDeath();
                     break;
                 }
             }
@@ -300,7 +320,15 @@ public class GamePanel extends JPanel{
         }
         bulletCollisions();
     }
-
+    private void startGame() {
+        resetGame();
+        state = GameState.PLAYING;
+    }
+    private void onDeath() {
+        highScore = Math.max(highScore, score);
+        alive = false;
+        state = GameState.GAME_OVER;
+    }
     private void resetGame() {
         alive = true;
         score = 0;
@@ -312,10 +340,67 @@ public class GamePanel extends JPanel{
         gameStartMs = System.currentTimeMillis();
     }
 
+    private void drawOverlay(Graphics2D g2, boolean showTitle) {
+        // 1) dim background
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.55f));
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, WIDTH, HEIGHT);
+
+        // reset alpha for the box/text
+        g2.setComposite(AlphaComposite.SrcOver);
+
+        int boxW = 520, boxH = showTitle ? 300 : 260;
+        int x = (WIDTH - boxW) / 2;
+        int y = (HEIGHT - boxH) / 2;
+
+        // 2) box
+        g2.setColor(new Color(30, 30, 30, 230));
+        g2.fillRoundRect(x, y, boxW, boxH, 24, 24);
+        g2.setColor(new Color(220, 220, 220, 220));
+        g2.drawRoundRect(x, y, boxW, boxH, 24, 24);
+
+        // 3) text
+        int tx = x + 28;
+        int ty = y + 50;
+
+        g2.setColor(Color.WHITE);
+
+        if (showTitle) {
+            g2.setFont(new Font("SansSerif", Font.BOLD, 34));
+            g2.drawString("CorBrawl", tx, ty);
+            ty += 40;
+        } else {
+            g2.setFont(new Font("SansSerif", Font.BOLD, 28));
+            g2.drawString("You Died", tx, ty);
+            ty += 38;
+
+            g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
+            g2.drawString("Score: " + score, tx, ty);
+            ty += 28;
+        }
+
+        g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
+        g2.drawString("High Score: " + highScore, tx, ty);
+        ty += 30;
+
+        g2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        if (showTitle) {
+            g2.drawString("WASD to move, Mouse to aim/shoot", tx, ty);
+            ty += 22;
+            g2.drawString("Survive as long as you can.", tx, ty);
+            ty += 30;
+            g2.drawString("Press ENTER to start", tx, ty);
+        } else {
+            g2.drawString("Press ENTER to restart", tx, ty);
+            ty += 22;
+            g2.drawString("Press ESC for menu", tx, ty);
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        
         // Drawing the grass
         int grassSize = 16;
         int startTileX = (int) Math.floor(camX / grassSize);
@@ -380,9 +465,11 @@ public class GamePanel extends JPanel{
         g.drawString("Enemy cap: " + currentEnemyCap(), 10, 60);
         g.drawString("Mouse: " + mouseX + ", " + mouseY, 10, 80);
 
-        if (!alive) {
-            g.setColor(Color.BLACK);
-            g.drawString("GAME OVER", WIDTH / 2 - 40, HEIGHT / 2 - 50);
+
+        if (state == GameState.MENU) {
+            drawOverlay(g2, true);
+        } else if (state == GameState.GAME_OVER) {
+            drawOverlay(g2, false);
         }
 
     }
